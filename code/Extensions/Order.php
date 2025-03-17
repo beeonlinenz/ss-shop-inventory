@@ -44,6 +44,10 @@ class Order extends DataExtension
 
     public function afterAdd($item, $buyable, $quantity, $filter)
     {
+        //BEE:: beforeAdd wasn't working correctly from the Product page
+        if ($buyable->AvailableStock() < $item->Quantity) {
+            $item->Quantity = $buyable->AvailableStock();
+        }
         if ($buyable && $this->isAffectedItem($buyable, 'cart')) {
             $buyable->decrementStock($quantity, $item);
             $item->PreviousQuantity = null;
